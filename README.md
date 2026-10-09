@@ -1,3 +1,5 @@
+# Transform a rectangular atlas to a square atlas!
+
 To use this atlas converter:
 
 1. Install the Python library called "Pillow":

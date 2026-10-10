@@ -1,4 +1,4 @@
-from PIL import Image
+from PIL import Image, ImageDraw, ImageFont
 
 old = "old-atlas.png" # old atlas image file
 tile = 32 # Pixels. Each tile is a 32px by 32px square
@@ -29,3 +29,19 @@ for index in range(tiles):
     atlas.paste(paste, (a, b))
 
 atlas.save("atlas.png")
+
+# Draw translucent red numbers on a separate overlay.
+overlay = Image.new("RGBA", atlas.size, (0, 0, 0, 0))
+draw = ImageDraw.Draw(overlay)
+font = ImageFont.load_default()
+for index in range(tiles):
+    column = index % columns
+    row = index // columns
+    label = str(index + 1)
+    box = draw.textbbox((0, 0), label, font=font)
+    width = box[2] - box[0]
+    height = box[3] - box[1]
+    x = column * tile + (tile - width) / 2
+    y = row * tile + (tile - height) / 2
+    draw.text((x, y), label, font=font, fill=(255, 0, 0, 150))
+Image.alpha_composite(atlas, overlay).save("numbered-atlas.png")

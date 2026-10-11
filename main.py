@@ -1,7 +1,7 @@
-# First, we have to import three classes
+# First, you have to import three classes
 # from Pillow.
 from PIL import Image, ImageDraw, ImageFont
-# Then we have to create some variables.
+# Then you have to assign some variables.
 # These can customized for your specific atlas.
 # What is the name of your original atlas?
 old = "old.png"
@@ -19,6 +19,8 @@ grid = 1
 # actually start appearing in your PNG.
 x = 0
 y = 0
+# Load your atlas and ensure it has an alpha
+# channel for transparency
 old = Image.open(old).convert("RGBA")
 # Because we're starting with a rectangular
 # PNG, we need to collect some width

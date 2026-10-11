@@ -11,6 +11,12 @@ tile = 32
 # If there is a grid of lines separating each
 # tile, how thick are the grid lines in pixels? 
 grid = 1
+# The top left corner pixel of an image
+# is represented by the coordinate (0,0).
+# If your tiles start immediately at (0,0),
+# then no need to change this, but you can
+# add an offset here based on when tiles
+#
 x = 0
 y = 0
 # Open the PNG and convert to RGB with Alpha

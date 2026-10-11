@@ -1,50 +1,52 @@
 from PIL import Image, ImageDraw, ImageFont
-
-old = "old-atlas.png" # old atlas image file
-tile = 32 # Pixels. Each tile is a 32px by 32px square
-border = 1 # Each tile shares a 1px border with the tiles around it
-x = 0 # start at left
-y = 0 # start at top
-image = Image.open(old)
-columns = (image.width - x + border) // (tile + border)
-rows = (image.height - y + border) // (tile + border)
-tiles = columns * rows
-print("There are ", tiles, " textures in this atlas.")
-count = 1
-while count * count < tiles:
-    count += 1
-
-atlas = Image.new("RGBA",
-                  (count * tile, count * tile),
-                  (0, 0, 0, 0))
-for index in range(tiles):
-    target = tiles - 1 - index
-    column = target % columns
-    # Floor divide by columns
-    # columns = number of tiles that fit in a single row
-    row = target // columns
-    # read from the old, rectangular image and paste
-    # into the new, square image
-    a = x + column * (tile + border)
-    b = y + row * (tile + border)
-    paste = image.crop((a, b, a + tile, b + tile))
-    a = index % count * tile
-    b = index // count * tile
-    atlas.paste(paste, (a, b))
+old = "old-atlas.png"
+tile = 32
+border = 1
+x = 0
+y = 0
+old = Image.open(old).convert("RGBA")
+columns = (old.width - x + border) // (tile + border)
+rows = (old.height - y + border) // (tile + border)
+original_tiles = columns * rows
+total_tiles = original_tiles * 9
+print(f"There are {original_tiles} original textures, expanding to {total_tiles} tiles.")
+block_side = 1
+while block_side * block_side < original_tiles:
+    block_side += 1
+atlas_size = block_side * 3 * tile
+atlas = Image.new("RGBA", (atlas_size, atlas_size), (0, 0, 0, 0))
+for original_index in range(original_tiles):
+    source_index = original_tiles - 1 - original_index
+    source_column = source_index % columns
+    source_row = source_index // columns
+    source_x = x + source_column * (tile + border)
+    source_y = y + source_row * (tile + border)
+    tile_image = image.crop(
+        (source_x, source_y, source_x + tile, source_y + tile)
+    )
+    block_column = original_index % block_side
+    block_row = original_index // block_side
+    for copy_index in range(9):
+        copy_column = copy_index % 3
+        copy_row = copy_index // 3
+        dest_x = (block_column * 3 + copy_column) * tile
+        dest_y = (block_row * 3 + copy_row) * tile
+        atlas.paste(tile_image, (dest_x, dest_y))
 atlas.save("atlas.png")
-
-# Draw translucent red numbers on a separate overlay.
-overlay = Image.new("RGBA", atlas.size, (0, 0, 0, 0))
-draw = ImageDraw.Draw(overlay)
+numbered = atlas.copy()
+draw = ImageDraw.Draw(numbered)
 font = ImageFont.load_default()
-for index in range(tiles):
-    column = index % columns
-    row = index // columns
-    label = str(index)
-    box = draw.textbbox((0, 0), label, font=font)
-    width = box[2] - box[0]
-    height = box[3] - box[1]
-    x = index % count * tile
-    y = index // count * tile
-    draw.text((x, y), label, font=font, fill=(255, 0, 0, 150))
-Image.alpha_composite(atlas, overlay).save("numbered-atlas.png")
+grid_side = block_side * 3
+index = 0
+for tile_row in range(grid_side):
+    for tile_column in range(grid_side):
+        block_row = tile_row // 3
+        block_column = tile_column // 3
+        block_index = block_row * block_side + block_column
+        if block_index >= original_tiles:
+            continue
+        px = tile_column * tile
+        py = tile_row * tile
+        draw.text((px, py),str(index),font=font,fill=(0, 0, 255))
+        index += 1
+numbered.save("numbered-atlas.png")

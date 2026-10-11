@@ -1,9 +1,18 @@
+# Import three classes from Pillow
 from PIL import Image, ImageDraw, ImageFont
-old = "old-atlas.png"
+# Set some constants; you can configure these
+# old = name of file you want to transform
+# tile = assuming square tiles, how many 
+# pixels long is each side?
+# border = is there a grid of lines in between
+# the tiles? This is thickness in pixels
+# x and y 
+old = "old.png"
 tile = 32
 border = 1
 x = 0
 y = 0
+
 old = Image.open(old).convert("RGBA")
 columns = (old.width - x + border) // (tile + border)
 rows = (old.height - y + border) // (tile + border)

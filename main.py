@@ -1,20 +1,34 @@
-# Import three classes from Pillow
+# First, we have to import three classes
+# from Pillow.
 from PIL import Image, ImageDraw, ImageFont
-# Set some constants; you can configure these
-# old = name of file you want to transform
-# tile = assuming square tiles, how many 
-# pixels long is each side?
-# border = is there a grid of lines in between
-# the tiles? This is thickness in pixels
-# x and y 
+# Then we have to create some variables.
+# These can customized for your specific atlas.
+# What is the name of your original atlas?
 old = "old.png"
+# How long is each tile in pixels?
+# This script assumes that all tiles are square.
 tile = 32
-border = 1
+# If there is a grid of lines separating each
+# tile, how thick are the grid lines in pixels? 
+grid = 1
 x = 0
 y = 0
-
+# Open the PNG and convert to RGB with Alpha
 old = Image.open(old).convert("RGBA")
-columns = (old.width - x + border) // (tile + border)
+# scratch is an intermediate variable i use
+# to store results and prevent
+# long lines of code. First, get the width
+# of the old atlas and subtract any offset
+# to understand the size of the area with tiles
+scratch = old.width - x
+# then divide the width of the area with tiles
+# by the width of each tile and the border size
+# This 
+# In a fencepost scenario, you would have to
+# set x to whatever the size of border is
+# on the far left and far right
+
+columns = scratch // (tile + border)
 rows = (old.height - y + border) // (tile + border)
 original_tiles = columns * rows
 total_tiles = original_tiles * 9

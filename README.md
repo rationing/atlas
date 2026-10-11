@@ -1,4 +1,5 @@
-# Transform a rectangular atlas to an inflated square atlas!
+# Transform a rectangular PNG texture
+# atlas to an inflated square atlas!
 
 To use this texture atlas converter:
 

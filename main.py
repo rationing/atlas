@@ -16,17 +16,17 @@ grid = 1
 # If your tiles start immediately at (0,0),
 # then no need to change this, but you can
 # add an offset here based on when tiles
-#
+# actually start appearing in your PNG.
 x = 0
 y = 0
-# Open the PNG and convert to RGB with Alpha
 old = Image.open(old).convert("RGBA")
-# scratch is an intermediate variable i use
-# to store results and prevent
-# long lines of code. First, get the width
-# of the old atlas and subtract any offset
-# to understand the size of the area with tiles
-scratch = old.width - x
+# Because we're starting with a rectangular
+# PNG, we need to collect some width
+# and height measurements. Get the width
+# of the old atlas and subtract any horizontal
+# offset to find the width of the area
+# with tiles.
+old_width = old.width - x
 # then divide the width of the area with tiles
 # by the width of each tile and the border size
 # This 

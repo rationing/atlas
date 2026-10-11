@@ -4,6 +4,10 @@ atlas to an inflated square atlas!
 
 To use this texture atlas converter:
 
+0. As an optional step, read ``main.py``
+   to to thoroughly understand what the
+   script does before executing it.
+
 1. [Install Pillow](
 https://github.com/python-pillow/Pillow
 )
